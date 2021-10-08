@@ -18,13 +18,23 @@ def open_json_inside_zip_file(file):
           raise Exception(f'Error accessing {file} contents')
 
 
-def run_evaluation():
-     '''Runs the evaluation procedure'''
-     test_dataset = open_json_inside_zip_file(sys.argv[1])
-     submission_data = open_json_inside_zip_file(sys.argv[2])
-     metrics = evaluate(test_dataset, submission_data)
-     return metrics
+def extract_zip_contents(file, path):
+     '''Opens a single .json inside a .zip file'''
+     try:
+          with ZipFile(file, 'r') as zip_ref:
+               zip_ref.extractall(path)
+               return path
+     except Exception as e:
+          raise Exception(f'Error unzipping {file} contents')
 
+
+def run_evaluation(data_ground_truth_path, data_submission_path):
+     '''Runs the evaluation procedure'''
+     try:
+          metrics = evaluate(data_ground_truth_path, data_submission_path)
+          return metrics
+     except Exception as e:
+          raise Exception(f'Error in evaluation script: {e}')
 
 def print_tseo_success(metrics, elapsed_time):
      '''Send the Successful Task Submission Evaluation Object (TSEO) back to the server'''
@@ -51,9 +61,13 @@ def print_tseo_failure(error, elapsed_time):
 
 
 if __name__ == '__main__':
-     start_time = datetime.now()
      try:
-          metrics = run_evaluation()
+          start_time = datetime.now()
+          # Unzip
+          data_ground_truth_path = extract_zip_contents(sys.argv[1], path='data_ground_truth')
+          data_submission_path = extract_zip_contents(sys.argv[2], path='data_submission')
+          metrics = run_evaluation(data_ground_truth_path, data_submission_path)
+          # Run evaluation
           elapsed_time = datetime.now() - start_time
           print_tseo_success(metrics, elapsed_time)
      except Exception as e:
