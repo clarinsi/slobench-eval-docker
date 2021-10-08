@@ -2,7 +2,9 @@
 This folder also contains ground truth and submission .zip files for mock testing (these obviously won't be included in the public repo)
 
 ## Build docker image (from the root directory of this repo):
-```docker build -t eval:eval_prototype -f evaluation_scripts/eval_prototype/Dockerfile .```
+```
+docker build -t eval:eval_prototype -f evaluation_scripts/eval_prototype/Dockerfile .
+```
 
 ## Run mock evaluation (from the root directory of this repo)
 ```

@@ -31,7 +31,10 @@ docker build -t eval:TASK_NAME -f evaluation_scripts/TASK_NAME/Dockerfile .
 
 Run mock evaluation
 ```
-docker run -it --name eval-container --rm -v /submission.json.zip:/submission.zip -v /submission.json.zip:/test_dataset.zip eval:TASK_NAME test_dataset.zip submission.zip
+docker run -it --name eval-container --rm \
+-v $PWD/evaluation_scripts/TASK_NAME/ground_truth.zip:/ground_truth.zip \
+-v $PWD/evaluation_scripts/TASK_NAME/submission.zip:/submission.zip \
+eval:TASK_NAME ground_truth.zip submission.zip
 ```
 
 ## Currently supported tasks
