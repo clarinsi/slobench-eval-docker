@@ -7,6 +7,14 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, accuracy_score
 
+boolean_mapping = {
+        'true': True,
+        'false': False,
+        True: True,
+        False: False,
+        'True': True,
+        'False': False
+}
 
 def report_error(task):
     raise Exception(f'Evaluating task "{task}" resulted in an error: Submitted and test indices do not match')
@@ -21,11 +29,8 @@ def BoolQ(y_true, y_pred):
     y_pred.rename(columns={'label': 'y_pred'}, inplace=True)
 
     # reformat y_pred from boolq predicted (they do not get recognized as boolean automatically)
-    mapping = {
-        'true': True,
-        'false': False
-    }
-    y_pred['y_pred'] = y_pred['y_pred'].map(mapping)
+    y_pred['y_pred'] = y_pred['y_pred'].map(boolean_mapping)
+    y_true['y_true'] = y_true['y_true'].map(boolean_mapping)
 
     # merge data on indices from y_true
     merged = pd.merge(y_true, y_pred, how='inner', on='idx')
@@ -202,11 +207,8 @@ def WSC(y_true, y_pred):
     y_pred.rename(columns={'label': 'y_pred'}, inplace=True)
 
     # reformat y_pred from wsc predicted (they do not get recognized as boolean automatically)
-    mapping = {
-        'True': True,
-        'False': False
-    }
-    y_pred['y_pred'] = y_pred['y_pred'].map(mapping)
+    y_pred['y_pred'] = y_pred['y_pred'].map(boolean_mapping)
+    y_true['y_true'] = y_true['y_true'].map(boolean_mapping)
 
     # merge data on indices from y_true
     merged = pd.merge(y_true, y_pred, how='inner', on='idx')
