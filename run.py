@@ -15,7 +15,7 @@ def open_json_inside_zip_file(file):
                with z.open(filename) as f:
                     return json.load(f)
      except Exception as e:
-          raise Exception(f'Error accessing {file} contents')
+          raise Exception(f'Error accessing {file} contents Error: "{e}"')
 
 
 def extract_zip_contents(file, path):
@@ -25,7 +25,7 @@ def extract_zip_contents(file, path):
                zip_ref.extractall(path)
                return path
      except Exception as e:
-          raise Exception(f'Error unzipping {file} contents')
+          raise Exception(f'Error unzipping {file} contents. Error: "{e}"')
 
 
 def run_evaluation(data_ground_truth_path, data_submission_path):
