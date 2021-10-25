@@ -1,4 +1,4 @@
-__author__ = "Ales Zagar"
+__author__ = "Ales Zagar and Slavko Zitnik"
 __version__ = "1.0"
 __maintainer__ = "Slavko Zitnik"
 __email__ = "slavko.zitnik@fri.uni-lj.si"
@@ -7,14 +7,14 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score, accuracy_score
 
-boolean_mapping = {
-        'true': True,
-        'false': False,
-        True: True,
-        False: False,
-        'True': True,
-        'False': False
-}
+def boolean_mapping(val):
+        bool_string = str(val).lower()
+        if bool_string == 'true':
+            return True
+        elif bool_string == 'false':
+            return False
+        else:
+            raise Exception(f'Label parsing resulted in an error: Boolean values are neither "true" or "false".')                
 
 def report_error(task):
     raise Exception(f'Evaluating task "{task}" resulted in an error: Submitted and test indices do not match')
@@ -30,7 +30,6 @@ def BoolQ(y_true, y_pred):
 
     # reformat y_pred from boolq predicted (they do not get recognized as boolean automatically)
     y_pred['y_pred'] = y_pred['y_pred'].map(boolean_mapping)
-    y_true['y_true'] = y_true['y_true'].map(boolean_mapping)
 
     # merge data on indices from y_true
     merged = pd.merge(y_true, y_pred, how='inner', on='idx')
@@ -208,7 +207,6 @@ def WSC(y_true, y_pred):
 
     # reformat y_pred from wsc predicted (they do not get recognized as boolean automatically)
     y_pred['y_pred'] = y_pred['y_pred'].map(boolean_mapping)
-    y_true['y_true'] = y_true['y_true'].map(boolean_mapping)
 
     # merge data on indices from y_true
     merged = pd.merge(y_true, y_pred, how='inner', on='idx')
