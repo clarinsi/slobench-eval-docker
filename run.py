@@ -19,7 +19,7 @@ def open_json_inside_zip_file(file):
 
 
 def extract_zip_contents(file, path):
-     '''Opens a single .json inside a .zip file'''
+     '''Extract all zip contents'''
      try:
           with ZipFile(file, 'r') as zip_ref:
                zip_ref.extractall(path)
