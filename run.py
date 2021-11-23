@@ -6,18 +6,6 @@ from evaluate import evaluate
 from datetime import datetime
 from time import sleep
 
-
-def open_json_inside_zip_file(file):
-     '''Opens a single .json inside a .zip file'''
-     try:
-          with ZipFile(file, 'r') as z:
-               filename = z.namelist()[0]
-               with z.open(filename) as f:
-                    return json.load(f)
-     except Exception as e:
-          raise Exception(f'Error accessing {file} contents Error: "{e}"')
-
-
 def extract_zip_contents(file, path):
      '''Extract all zip contents'''
      try:

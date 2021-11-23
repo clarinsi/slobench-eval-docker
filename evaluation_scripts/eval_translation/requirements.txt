@@ -1,0 +1,2 @@
+nltk==3.6.5
+sacrebleu==2.0.0
