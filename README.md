@@ -1,4 +1,6 @@
 # slobench-eval-docker
+TODO: zip files withou additional files!
+
 This is a sister repo of the SloBench project. It contains the evaluation script framework.
 
 ## Structure
