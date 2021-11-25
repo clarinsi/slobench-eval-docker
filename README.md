@@ -62,7 +62,11 @@ This repository supports the following tasks:
 
 ----
 
-
+<style>
+td, th {
+   border: none!important;
+}
+</style>
 
 <center>
 <table border="0" style="border: none;">
@@ -76,6 +80,6 @@ This repository supports the following tasks:
 	</tr>
 </table>
 <center>
-*SloBENCH tool was developed as an [https://www.clarin.si/info/storitve/projekti](Clarin.si 2021 project).*
+*SloBENCH tool was developed as an [Clarin.si 2021 project](https://www.clarin.si/info/storitve/projekti).*
 
 
