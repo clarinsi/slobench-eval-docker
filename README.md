@@ -1,14 +1,20 @@
-# slobench-eval-docker
-TODO: zip files withou additional files!
+![](cjvt-header.png)
+# SloBENCH official evaluation scripts
 
-This is a sister repo of the SloBench project. It contains the evaluation script framework.
 
-## Structure
-Upon uploading a submission to SloBench, the uploaded `submission.zip` file gets passed to a docker containter, along with the `ground_truth.zip` file.
+This is an accompanying repository that contains evaluation scripts used by the evaluation leaderboards in SloBENCH tool - [https://slobench.cjvt.si](https://slobench.cjvt.si).
+
+## Submission evaluation methodology.
+SloBENCH tool expects a user to upload a `submission.zip` file that contains contents according to the rules of a specific leaderboard.
+
+> Note: Zip file must not contain any other files, not expected by the system (e.g., __MACOSX). To be sure your submission is sound, you may use zip command from command line - for example: `zip submission.zip ./*.txt`
+
+Uploaded submission file is automatically extracted along with the `ground_truth.zip` file.
 
 The `run.py` script unzips the ground truth data into the `/data-truth` path and the submitted data into `/data-submission`.
 
-It then runs the task's corresponding `eval.py` evaluation script, which compares the contents of the previously mentioned paths and returns a dictionary of metricName:metricScore pairs, eg.:
+Then it runs the task's corresponding `eval.py` evaluation script, which compares the contents of the previously mentioned paths and returns a dictionary of *metricName:metricScore* pairs, for example:
+
 ```
 {
     'overall': 88.2,
@@ -18,26 +24,58 @@ It then runs the task's corresponding `eval.py` evaluation script, which compare
 }
 ```
 
-`run.py` finally puts all of this into a TSEO (Task Submission Evaluation Object), containing the metric scores of the evaluation + some metadata, which get passed back to the SloBench server.
+Script `run.py` returns evaluation results (or possibly an error) along with some running metadata into a Task Submission Evaluation Object, which is passed to the SloBENCH Web Server.
 
-## Dockerfile
-Each evaluation script has it's own Dockerfile, to enable custom environments for evaluation (custom Python versions, ...).
+## Leaderboard evaluation
+Each evaluation script is packaged into its own container - see specific Dockerfiles for your target leaderboard.
 
 When a new task evaluation script gets added to this repo, the a docker container gets composed and pushed to the `slobench/eval:[TASK-NAME]` docker repo.
 
-## Compiling a task evaluation docker image
-Build docker image (from root directory of this repo):
+## Compiling and running an evaluation locally
+Build docker image from root directory of this repository, cloned to your machine, as follows:
+
 ```
 docker build -t eval:TASK_NAME -f evaluation_scripts/TASK_NAME/Dockerfile .
 ```
 
-Run mock evaluation
+Test your evaluation as follows:
+
 ```
 docker run -it --name eval-container --rm \
--v $PWD/evaluation_scripts/TASK_NAME/ground_truth.zip:/ground_truth.zip \
--v $PWD/evaluation_scripts/TASK_NAME/submission.zip:/submission.zip \
+-v $PWD/DATA_WITH_LABELS.zip:/ground_truth.zip \
+-v $PWD/YOUR_SYSTEM_OUTPUT_DATA.zip:/submission.zip \
 eval:TASK_NAME ground_truth.zip submission.zip
 ```
+Change *TASK-NAME* accordingly and provide paths to your samples of ground truth/reference data (i.e., *DATA_WITH_LABELS.zip*) and your system output (i.e., *YOUR_SYSTEM_OUTPUT_DATA.zip*) for the reference data.
+
+For more information check README file of selected leaderboard.
 
 ## Currently supported tasks
-- eval_prototype
+
+This repository supports the following tasks:
+
+* **eval\_question\_answering**: Evaluation of selected SuperGLUE-like QA tasks.
+* **eval\_sequence\_tagging\_conllu**: General CONLLU-based evaluation tasks.
+* **eval\_sequence\_tagging\_tab**: General sequence labelling evaluation tasks.
+* **eval\_summarization**: Text summarization evaluation.
+* **eval\_translation**: Machine translation evaluation.
+
+--
+
+
+
+<center>
+<table style="border: none;">
+	<tr>
+		<td>
+			<img src="cjvt-logo.png" width="300pt" />
+		</td>
+		<td>
+			<img src="clarin-logo.png" width="300pt" />
+		</td>
+	</tr>
+</table>
+*SloBENCH tool was developed as an [Clarin.si 2021 project](https://www.clarin.si/info/storitve/projekti/#Projekti_ki_jih_podpira_CLARINSI).*
+<center>
+
+
