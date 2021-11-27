@@ -12,7 +12,7 @@ docker build -t eval:eval_question_answering -f evaluation_scripts/eval_question
 Evaluation within SloBENCH will be run as follows:
 
 ```
-docker run -it --name eval-container_question_asnwering --rm \
+docker run -it --name eval-container_question_answering --rm \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_ground_truth.zip:/ground_truth.zip \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_submission.zip:/submission.zip \
 eval:eval_question_answering ground_truth.zip submission.zip
@@ -22,7 +22,7 @@ As `qa_ground_truth.zip` for `qa_test.zip` is not available, you can do manual t
 
 
 ```
-docker run -it --name eval-container_question_asnwering --rm \
+docker run -it --name eval-container_question_answering --rm \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_validation.zip:/ground_truth.zip \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_validation.zip:/submission.zip \
 eval:eval_question_answering ground_truth.zip submission.zip
@@ -55,8 +55,41 @@ This command should result in an output like this:
 If you prepare your own split (from validation or train part of data), adjust volume parameters accordingly. For example, testing your output on validation data split: 
 
 ```
-docker run -it --name eval-container_question_asnwering --rm \
+docker run -it --name eval-container_question_answering --rm \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_validation.zip:/ground_truth.zip \
 -v PATH_TO_MY_VALIDATION_DATA_PREDICTIONS.zip:/submission.zip \
 eval:eval_question_answering ground_truth.zip submission.zip
+```
+
+## Reference output check
+
+```
+docker run -it --name eval-container_question_answering --rm \
+-v $PWD/evaluation_scripts/eval_question_answering/sample_reference.zip:/ground_truth.zip \
+-v $PWD/evaluation_scripts/eval_question_answering/sample_submission.zip:/submission.zip \
+eval:eval_question_answering ground_truth.zip submission.zip
+```
+
+This command should result in an output like this:
+
+
+```
+{
+  "status": "S",
+  "metrics": {
+    "BoolQ Accuracy": 0.6666666666666666,
+    "CB Accuracy": 0.6666666666666666,
+    "CB F1 Score": 0.4,
+    "CB Average": 0.5333333333333333,
+    "COPA Accuracy": 0.6666666666666666,
+    "MultiRC F1a Score": 0.4,
+    "MultiRC EM": 0.0,
+    "MultiRC Average": 0.2,
+    "RTE Accuracy": 0.6666666666666666,
+    "WSC Accuracy": 0.0,
+    "Average": 0.45555555555555555
+  },
+  "evaluation_time": 0.196328,
+  "error_report": ""
+}
 ```
