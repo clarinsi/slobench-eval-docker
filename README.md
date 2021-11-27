@@ -60,12 +60,11 @@ This repository supports the following tasks:
 * **eval\_summarization**: Text summarization evaluation.
 * **eval\_translation**: Machine translation evaluation.
 
---
-
+----
 
 
 <center>
-<table style="border: none;">
+<table border="0" style="border: none;">
 	<tr>
 		<td>
 			<img src="cjvt-logo.png" width="300pt" />
@@ -75,7 +74,7 @@ This repository supports the following tasks:
 		</td>
 	</tr>
 </table>
-*SloBENCH tool was developed as an [Clarin.si 2021 project](https://www.clarin.si/info/storitve/projekti/#Projekti_ki_jih_podpira_CLARINSI).*
 <center>
+SloBENCH tool was developed as an [Clarin.si 2021 project](https://www.clarin.si/info/storitve/projekti).
 
 
