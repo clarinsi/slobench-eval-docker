@@ -50,6 +50,16 @@ Change *TASK-NAME* accordingly and provide paths to your samples of ground truth
 
 For more information check README file of selected leaderboard.
 
+## Pushing an image to DockerHub
+
+This repository is accompanied with DockerHub repository [https://hub.docker.com/r/slobench/eval](https://hub.docker.com/r/slobench/eval). Images are pushed from local builds using the following commands:
+
+```
+docker login
+docker tag eval:eval_TASK-NAME slobench/eval:TASK-NAME_VERSION
+docker push slobench/eval:TASK-NAME_VERSION
+```
+
 ## Currently supported tasks
 
 This repository supports the following tasks:
