@@ -1,13 +1,13 @@
 import json
 
-def evaluate(data_ground_truth_path, data_submission_path):
-     # Open ground truth file
-     ground_truth = {}
+def evaluate(reference_dataset_path, data_submission_path):
+     # Open reference dataset file
+     reference_dataset = {}
      try:
-          with open('./'+data_ground_truth_path+'/submission.json') as json_file:
-               ground_truth = json.load(json_file)
+          with open('./'+reference_dataset_path+'/submission.json') as json_file:
+               reference_dataset = json.load(json_file)
      except Exception as e:
-          raise Exception(f'Exception in opening ground truth file: {e}')
+          raise Exception(f'Exception in opening reference dataset file: {e}')
 
      # Open Submission File
      submission = {}
@@ -21,9 +21,9 @@ def evaluate(data_ground_truth_path, data_submission_path):
 
      # Calculate metrics
      try:
-          shared_items = {k: ground_truth[k] for k in ground_truth if k in submission and ground_truth[k] == submission[k]}
+          shared_items = {k: reference_dataset[k] for k in reference_dataset if k in submission and reference_dataset[k] == submission[k]}
           metrics = {
-               'overall': float(len(shared_items) / len(ground_truth)) * 100,
+               'overall': float(len(shared_items) / len(reference_dataset)) * 100,
                'metric1': 11.0,
                'metric2': 12.0,
                'metric3': 13.0

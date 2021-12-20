@@ -13,9 +13,9 @@ Evaluation within SloBENCH will be run as follows:
 
 ```
 docker run -it --name eval-container_sequence_tagging_tab --rm \
--v $PWD/evaluation_scripts/eval_sequence_tagging_tab/reference.zip:/ground_truth.zip \
+-v $PWD/evaluation_scripts/eval_sequence_tagging_tab/reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_sequence_tagging_tab/submission.zip:/submission.zip \
-eval:eval_sequence_tagging_tab ground_truth.zip submission.zip
+eval:eval_sequence_tagging_tab reference_dataset.zip submission.zip
 ```
 
 As `reference.zip` is not available, you can do manual testing as follows:
@@ -23,9 +23,9 @@ As `reference.zip` is not available, you can do manual testing as follows:
 
 ```
 docker run -it --name eval-container_sequence_tagging_tab --rm \
--v $PWD/evaluation_scripts/eval_sequence_tagging_tab/sample_reference.zip:/ground_truth.zip \
+-v $PWD/evaluation_scripts/eval_sequence_tagging_tab/sample_reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_sequence_tagging_tab/sample_submission.zip:/submission.zip \
-eval:eval_sequence_tagging_tab ground_truth.zip submission.zip
+eval:eval_sequence_tagging_tab reference_dataset.zip submission.zip
 ```
 
 This command should result in an output like this:

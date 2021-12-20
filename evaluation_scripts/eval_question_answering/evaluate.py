@@ -73,9 +73,9 @@ def evaluate_tasks(tasks, pred_folder, true_folder):
     return results
 
 
-def evaluate(data_ground_truth_path, data_submission_path):
+def evaluate(reference_dataset_path, data_submission_path):
      pred_folder = data_submission_path
-     true_folder = data_ground_truth_path
+     true_folder = reference_dataset_path
 
      # Define tasks
      tasks = ['BoolQ', 'CB', 'COPA', 'MultiRC', 'RTE', 'WSC']

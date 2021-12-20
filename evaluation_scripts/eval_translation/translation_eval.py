@@ -29,10 +29,10 @@ def read_files(submission_filename, reference_filename):
     
     return (submission_lines, reference_lines)
 
-def evaluate_scores(data_submission_path, data_ground_truth_path):
+def evaluate_scores(data_submission_path, reference_dataset_path):
     # DATA IMPORT
     submission_filename = get_full_filename_path(data_submission_path)
-    reference_filename = get_full_filename_path(data_ground_truth_path)
+    reference_filename = get_full_filename_path(reference_dataset_path)
     (submission_lines, reference_lines) = read_files(submission_filename, reference_filename)
 
     # EVALUATION LINE METRICS

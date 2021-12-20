@@ -1,9 +1,9 @@
 from tagging_tab_eval import evaluate_scores
 import os
 
-def evaluate(data_ground_truth_path, data_submission_path):
+def evaluate(reference_dataset_path, data_submission_path):
      pred_folder = data_submission_path
-     true_folder = data_ground_truth_path
+     true_folder = reference_dataset_path
 
      # Calculate metrics
      try:
