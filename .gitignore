@@ -1,2 +1,5 @@
 __pycache__
 .idea
+
+evaluation_scripts/*/reference_dataset.zip
+evaluation_scripts/*/submission.zip
