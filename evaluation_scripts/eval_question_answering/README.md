@@ -4,7 +4,7 @@ All commands should be run from the root directory of this repository.
 
 ## Build docker image 
 ```
-docker build -t slobench/eval:question_answering -f evaluation_scripts/eval_question_answering/Dockerfile .
+docker buildx build --platform linux/amd64 -t slobench/eval:question_answering -f evaluation_scripts/eval_question_answering/Dockerfile .
 ```
 
 ## Run evaluation 
@@ -15,7 +15,7 @@ Evaluation within SloBENCH will be run as follows:
 docker run -it --name eval-container_question_answering --rm \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_reference_dataset.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_submission.zip:/submission.zip \
-slobench/eval:question_answering reference_dataset.zip submission.zip
+slobench/eval:question_answering_1.1 reference_dataset.zip submission.zip
 ```
 
 As `qa_reference_dataset.zip` for `qa_test.zip` is not available, you can do manual testing as follows:

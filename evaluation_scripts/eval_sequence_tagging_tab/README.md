@@ -4,7 +4,7 @@ All commands should be run from the root directory of this repository.
 
 ## Build docker image 
 ```
-docker build -t slobench/eval:sequence_tagging_tab -f evaluation_scripts/eval_sequence_tagging_tab/Dockerfile .
+docker buildx build --platform linux/amd64 -t slobench/eval:sequence_tagging_tab -f evaluation_scripts/eval_sequence_tagging_tab/Dockerfile .
 ```
 
 ## Run evaluation 

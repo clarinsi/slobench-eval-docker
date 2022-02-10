@@ -4,7 +4,7 @@ All commands should be run from the root directory of this repository.
 
 ## Build docker image 
 ```
-docker build -t slobench/eval:translation -f evaluation_scripts/eval_translation/Dockerfile .
+docker buildx build --platform linux/amd64 -t slobench/eval:translation -f evaluation_scripts/eval_translation/Dockerfile .
 ```
 
 ## Run evaluation 

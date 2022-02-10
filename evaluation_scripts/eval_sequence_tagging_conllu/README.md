@@ -4,7 +4,7 @@ All commands should be run from the root directory of this repository.
 
 ## Build docker image 
 ```
-docker build -t sequence_tagging_conllu -f evaluation_scripts/eval_sequence_tagging_conllu/Dockerfile .
+docker buildx build --platform linux/amd64 -t sequence_tagging_conllu -f evaluation_scripts/eval_sequence_tagging_conllu/Dockerfile .
 ```
 
 ## Run evaluation 

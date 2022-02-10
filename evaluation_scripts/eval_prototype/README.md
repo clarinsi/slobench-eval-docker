@@ -4,7 +4,7 @@ This folder also contains reference dataset (ground truth) and submission .zip f
 
 ## Build docker image (from the root directory of this repo):
 ```
-docker build -t slobench/eval:prototype -f evaluation_scripts/eval_prototype/Dockerfile .
+docker buildx build --platform linux/amd64 -t slobench/eval:prototype -f evaluation_scripts/eval_prototype/Dockerfile .
 ```
 
 ## Run mock evaluation (from the root directory of this repo)
