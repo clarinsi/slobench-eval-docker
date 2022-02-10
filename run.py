@@ -16,10 +16,10 @@ def extract_zip_contents(file, path):
           raise Exception(f'Error unzipping {file} contents. Error: "{e}"')
 
 
-def run_evaluation(data_ground_truth_path, data_submission_path):
+def run_evaluation(data_reference_path, data_submission_path):
      '''Runs the evaluation procedure'''
      try:
-          metrics = evaluate(data_ground_truth_path, data_submission_path)
+          metrics = evaluate(data_reference_path, data_submission_path)
           return metrics
      except Exception as e:
           raise Exception(f'Error in evaluation script: {e}')
@@ -52,9 +52,9 @@ if __name__ == '__main__':
      try:
           start_time = datetime.now()
           # Unzip
-          data_ground_truth_path = extract_zip_contents(sys.argv[1], path='data_ground_truth')
+          data_reference_path = extract_zip_contents(sys.argv[1], path='data_reference')
           data_submission_path = extract_zip_contents(sys.argv[2], path='data_submission')
-          metrics = run_evaluation(data_ground_truth_path, data_submission_path)
+          metrics = run_evaluation(data_reference_path, data_submission_path)
           # Run evaluation
           elapsed_time = datetime.now() - start_time
           print_tseo_success(metrics, elapsed_time)
