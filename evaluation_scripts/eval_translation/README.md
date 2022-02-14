@@ -15,7 +15,7 @@ Evaluation within SloBENCH will be run as follows:
 docker run -it --name eval-container_translation --rm \
 -v $PWD/evaluation_scripts/eval_translation/reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_translation/submission.zip:/submission.zip \
-slobench/eval:translation reference_dataset.zip submission.zip
+slobench/eval:translation_1.1 reference_dataset.zip submission.zip
 ```
 
 As `reference.zip` is not available, you can do manual testing as follows:
@@ -25,7 +25,7 @@ As `reference.zip` is not available, you can do manual testing as follows:
 docker run -it --name eval-container_translation --rm \
 -v $PWD/evaluation_scripts/eval_translation/sample_reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_translation/sample_submission.zip:/submission.zip \
-slobench/eval:translation reference_dataset.zip submission.zip
+slobench/eval:translation_1.1 reference_dataset.zip submission.zip
 ```
 
 This command should result in an output like this:

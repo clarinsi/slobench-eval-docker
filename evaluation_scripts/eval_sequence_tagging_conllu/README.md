@@ -15,7 +15,7 @@ Evaluation within SloBENCH will be run as follows:
 docker run -it --name eval-container_sequence_tagging_conllu --rm \
 -v $PWD/evaluation_scripts/eval_sequence_tagging_conllu/reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_sequence_tagging_conllu/submission.zip:/submission.zip \
-sequence_tagging_conllu reference_dataset.zip submission.zip
+slobench/eval:sequence_tagging_conllu_1.1 reference_dataset.zip submission.zip
 ```
 
 As `reference.zip` is not available, you can do manual testing as follows:
@@ -25,7 +25,7 @@ As `reference.zip` is not available, you can do manual testing as follows:
 docker run -it --name eval-container_sequence_tagging_conllu --rm \
 -v $PWD/evaluation_scripts/eval_sequence_tagging_conllu/sample_reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_sequence_tagging_conllu/sample_submission.zip:/submission.zip \
-sequence_tagging_conllu reference_dataset.zip submission.zip
+slobench/eval:sequence_tagging_conllu_1.1 reference_dataset.zip submission.zip
 ```
 
 This command should result in an output like this:

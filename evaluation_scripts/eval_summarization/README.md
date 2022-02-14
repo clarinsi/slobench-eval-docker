@@ -15,7 +15,7 @@ Evaluation within SloBENCH will be run as follows:
 docker run -it --name eval-container_summarization --rm \
 -v $PWD/evaluation_scripts/eval_summarization/reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_summarization/submission.zip:/submission.zip \
-slobench/eval:summarization reference_dataset.zip submission.zip
+slobench/eval:summarization_1.1 reference_dataset.zip submission.zip
 ```
 
 As `reference.zip` is not available, you can do manual testing as follows:
@@ -25,7 +25,7 @@ As `reference.zip` is not available, you can do manual testing as follows:
 docker run -it --name eval-container_summarization --rm \
 -v $PWD/evaluation_scripts/eval_summarization/sample_reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_summarization/sample_submission.zip:/submission.zip \
-slobench/eval:summarization reference_dataset.zip submission.zip
+slobench/eval:summarization_1.1 reference_dataset.zip submission.zip
 ```
 
 This command should result in an output like this:

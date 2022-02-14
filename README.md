@@ -9,9 +9,9 @@ SloBENCH tool expects a user to upload a `submission.zip` file that contains con
 
 > Note: Zip file must not contain any other files, not expected by the system (e.g., __MACOSX). To be sure your submission is sound, you may use zip command from command line - for example: `zip submission.zip ./*.txt`
 
-Uploaded submission file is automatically extracted along with the `ground_truth.zip` file.
+Uploaded submission file is automatically extracted along with the `reference_dataset.zip` file.
 
-The `run.py` script unzips the ground truth data into the `/data-truth` path and the submitted data into `/data-submission`.
+The `run.py` script unzips the ground truth data into the `/data-reference` path and the submitted data into `/data-submission`.
 
 Then it runs the task's corresponding `eval.py` evaluation script, which compares the contents of the previously mentioned paths and returns a dictionary of *metricName:metricScore* pairs, for example:
 
@@ -35,7 +35,7 @@ When a new task evaluation script gets added to this repo, the a docker containe
 Build docker image from root directory of this repository, cloned to your machine, as follows:
 
 ```
-docker build -t eval:TASK_NAME -f evaluation_scripts/TASK_NAME/Dockerfile .
+docker buildx build --platform linux/amd64 -t eval:TASK_NAME -f evaluation_scripts/TASK_NAME/Dockerfile .
 ```
 
 Test your evaluation as follows:

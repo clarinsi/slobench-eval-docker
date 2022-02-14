@@ -13,19 +13,19 @@ Evaluation within SloBENCH will be run as follows:
 
 ```
 docker run -it --name eval-container_question_answering --rm \
--v $PWD/evaluation_scripts/eval_question_answering/qa_reference_dataset.zip:/reference_dataset.zip \
--v $PWD/evaluation_scripts/eval_question_answering/qa_submission.zip:/submission.zip \
+-v $PWD/evaluation_scripts/eval_question_answering/reference_dataset.zip:/reference_dataset.zip \
+-v $PWD/evaluation_scripts/eval_question_answering/submission.zip:/submission.zip \
 slobench/eval:question_answering_1.1 reference_dataset.zip submission.zip
 ```
 
-As `qa_reference_dataset.zip` for `qa_test.zip` is not available, you can do manual testing as follows:
+As `reference_dataset.zip` for `test.zip` is not available, you can do manual testing as follows:
 
 
 ```
 docker run -it --name eval-container_question_answering --rm \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_validation.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_validation.zip:/submission.zip \
-slobench/eval:question_answering reference_dataset.zip submission.zip
+slobench/eval:question_answering_1.1 reference_dataset.zip submission.zip
 ```
 
 This command should result in an output like this:
@@ -58,16 +58,16 @@ If you prepare your own split (from validation or train part of data), adjust vo
 docker run -it --name eval-container_question_answering --rm \
 -v $PWD/evaluation_scripts/eval_question_answering/qa_validation.zip:/reference_dataset.zip \
 -v PATH_TO_MY_VALIDATION_DATA_PREDICTIONS.zip:/submission.zip \
-slobench/eval:question_answering reference_dataset.zip submission.zip
+slobench/eval:question_answering_1.1 reference_dataset.zip submission.zip
 ```
 
 ## Reference output check
 
 ```
 docker run -it --name eval-container_question_answering --rm \
--v $PWD/evaluation_scripts/eval_question_answering/sample_reference.zip:/reference_dataset.zip \
+-v $PWD/evaluation_scripts/eval_question_answering/sample_reference_dataset.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_question_answering/sample_submission.zip:/submission.zip \
-slobench/eval:question_answering reference_dataset.zip submission.zip
+slobench/eval:question_answering_1.1 reference_dataset.zip submission.zip
 ```
 
 This command should result in an output like this:
