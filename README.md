@@ -68,9 +68,10 @@ This repository supports the following tasks:
 * **eval\_sequence\_tagging\_conllu**: General CONLLU-based evaluation tasks.
 * **eval\_sequence\_tagging\_tab**: General sequence labelling evaluation tasks.
 * **eval\_summarization**: Text summarization evaluation.
-* **eval\_translation_en**: Machine translation evaluation (English target).
-* **eval\_translation_sl**: Machine translation evaluation (Slovene target).
-* **eval\_sequence_pair_classification**: Sequence pair classification evaluation.
+* **eval\_translation\_en**: Machine translation evaluation (English target).
+* **eval\_translation\_sl**: Machine translation evaluation (Slovene target).
+* **eval\_sequence\_pair\_classification**: Sequence pair classification evaluation.
+* **eval\_speech\_recognition**: Automated speech recognition evaluation.
 
 ----
 
