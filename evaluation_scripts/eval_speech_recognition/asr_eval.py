@@ -53,15 +53,24 @@ def evaluate_scores(data_submission_path, data_reference_path):
 
     # Calculate
     transformation = jiwer.Compose([
+        jiwer.SubstituteRegexes({r"(^|\s)[<\[][^\s]+[\]>](\s|$)":""}),
         jiwer.RemovePunctuation(),
         jiwer.ToLowerCase(),
         jiwer.RemoveWhiteSpace(replace_by_space=True),
         jiwer.RemoveMultipleSpaces(),
-        #jiwer.RemoveKaldiNonWords(),
-        jiwer.Strip(),
+        #jiwer.RemoveEmptyStrings(),
+        jiwer.SubstituteRegexes({r"^$":"X"}), # If empty strings removed, submission and reference sets might not match!
         jiwer.ReduceToListOfListOfWords(word_delimiter=" ")
     ]) 
-
+    transformation_cer = jiwer.Compose([
+        jiwer.SubstituteRegexes({r"(^|\s)[<\[][^\s]+[\]>](\s|$)":""}),
+        jiwer.RemovePunctuation(),
+        jiwer.ToLowerCase(),
+        jiwer.RemoveWhiteSpace(replace_by_space=True),
+        jiwer.RemoveMultipleSpaces(),
+        #jiwer.RemoveEmptyStrings()        
+        jiwer.SubstituteRegexes({r"^$":"X"}) # If empty strings removed, submission and reference sets might not match!
+    ]) 
 
     measures = jiwer.compute_measures(
         reference_texts, 
@@ -73,10 +82,8 @@ def evaluate_scores(data_submission_path, data_reference_path):
     wil = measures['wil']
     wip = measures['wip']
     cer = jiwer.cer(
-        reference_texts, 
-        submission_texts,
-        truth_transform=transformation, 
-        hypothesis_transform=transformation)
+        transformation_cer(reference_texts), 
+        transformation_cer(submission_texts))
 
     results = {}
     results['CER'] = cer
