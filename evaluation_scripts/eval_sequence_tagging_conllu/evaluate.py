@@ -18,18 +18,10 @@ def evaluate_scores(submission_folder, reference_folder):
 
      results = {}
 
-
-     results["LAS Precision"] = evaluation["LAS"].precision
-     results["LAS Recall"] = evaluation["LAS"].recall
-     results["LAS F1 Score"] = evaluation["LAS"].f1
-
-     results["MLAS Precision"] = evaluation["MLAS"].precision
-     results["MLAS Recall"] = evaluation["MLAS"].recall
-     results["MLAS F1 Score"] = evaluation["MLAS"].f1
-
-     results["BLEX Precision"] = evaluation["BLEX"].precision
-     results["BLEX Recall"] = evaluation["BLEX"].recall
-     results["BLEX F1 Score"] = evaluation["BLEX"].f1
+     for eval_dimension in ["Sentences", "Tokens", "Lemmas", "XPOS", "UPOS", "UFeats", "LAS", "UAS"]:
+          results[f"{eval_dimension} Precision"] = evaluation[eval_dimension].precision
+          results[f"{eval_dimension} Recall"] = evaluation[eval_dimension].recall
+          results[f"{eval_dimension} F1 Score"] = evaluation[eval_dimension].f1
 
      return results
 
