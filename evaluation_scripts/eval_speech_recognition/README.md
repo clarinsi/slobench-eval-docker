@@ -35,13 +35,13 @@ This command should result in an output like this:
 {
   "status": "S",
   "metrics": {
-    "CER": 0.4,
+    "CER": 0.11940298507462686,
     "WER": 0.4,
     "MER": 0.4,
     "WIL": 0.64,
     "WIP": 0.36
   },
-  "evaluation_time": 3.012198,
+  "evaluation_time": 3.013593,
   "error_report": ""
 }
 ```
