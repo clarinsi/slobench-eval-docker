@@ -191,20 +191,20 @@ def get_result(correct_chunks, true_chunks, pred_chunks,
 
     # print overall performance, and performance per chunk type
     
-    print("processed %i tokens with %i phrases; " % (sum_true_counts, sum_true_chunks), end='')
-    print("found: %i phrases; correct: %i.\n" % (sum_pred_chunks, sum_correct_chunks), end='')
+    #print("processed %i tokens with %i phrases; " % (sum_true_counts, sum_true_chunks), end='')
+    #print("found: %i phrases; correct: %i.\n" % (sum_pred_chunks, sum_correct_chunks), end='')
         
-    print("accuracy: %6.2f%%; (non-O)" % (100*nonO_correct_counts/nonO_true_counts))
-    print("accuracy: %6.2f%%; " % (100*sum_correct_counts/sum_true_counts), end='')
-    print("precision: %6.2f%%; recall: %6.2f%%; FB1: %6.2f" % (prec, rec, f1))
+    #print("accuracy: %6.2f%%; (non-O)" % (100*nonO_correct_counts/nonO_true_counts))
+    #print("accuracy: %6.2f%%; " % (100*sum_correct_counts/sum_true_counts), end='')
+    #print("precision: %6.2f%%; recall: %6.2f%%; FB1: %6.2f" % (prec, rec, f1))
 
     # for each chunk type, compute precision, recall and FB1 (default values are 0.0)
     for t in chunk_types:
         prec, rec, f1 = calc_metrics(correct_chunks[t], pred_chunks[t], true_chunks[t])
-        print("%17s: " %t , end='')
-        print("precision: %6.2f%%; recall: %6.2f%%; FB1: %6.2f" %
-                    (prec, rec, f1), end='')
-        print("  %d" % pred_chunks[t])
+        #print("%17s: " %t , end='')
+        #print("precision: %6.2f%%; recall: %6.2f%%; FB1: %6.2f" %
+        #            (prec, rec, f1), end='')
+        #print("  %d" % pred_chunks[t])
 
         results[f'P ({t})'] = prec
         results[f'R ({t})'] = rec
