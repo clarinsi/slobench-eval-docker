@@ -67,6 +67,7 @@ This repository supports the following tasks:
 * **eval\_question\_answering**: Evaluation of selected SuperGLUE-like QA tasks.
 * **eval\_sequence\_tagging\_conllu**: General CONLLU-based evaluation tasks.
 * **eval\_sequence\_tagging\_tab**: General sequence labelling evaluation tasks.
+* **eval\_conll2002**: CoNLL 2002 NER evaluation.
 * **eval\_summarization**: Text summarization evaluation.
 * **eval\_translation\_en**: Machine translation evaluation (English target).
 * **eval\_translation\_sl**: Machine translation evaluation (Slovene target).
