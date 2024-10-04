@@ -76,6 +76,7 @@ def evaluate_scores(data_submission_path, data_reference_path):
     results = {}
     results['CER'] = cer
     results['WER'] = wer
+    results['1 - WER'] = 1-wer
     results['MER'] = mer
     results['WIL'] = wil
     results['WIP'] = wip
