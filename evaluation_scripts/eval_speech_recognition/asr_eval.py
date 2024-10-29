@@ -53,11 +53,12 @@ def evaluate_scores(data_submission_path, data_reference_path):
 
     # Calculate
     transformation = jiwer.Compose([
-        jiwer.SubstituteRegexes({r"(^|\s)[<\[][^\s]+[\]>](\s|$)":" "}), # since we match ' <...> ' must replace with ' '
+        jiwer.SubstituteRegexes({r"(^|\s)([<\[][^\s]+[\]>])(\s*([<\[][^\s]+[\]>]))*(\s|$)":" "}), # since we match ' <...> ' must replace with ' '
         jiwer.RemovePunctuation(),
         jiwer.ToLowerCase(),
         jiwer.RemoveWhiteSpace(replace_by_space=True),
         jiwer.RemoveMultipleSpaces(),
+        jiwer.Strip(), # remove whitespace at start or end of utterance that may have arised by removing special tokens '<...>'
         jiwer.SubstituteRegexes({r"^ {0,1}$":"X"}) # If empty strings removed, submission and reference sets might not match!
     ]) 
 
