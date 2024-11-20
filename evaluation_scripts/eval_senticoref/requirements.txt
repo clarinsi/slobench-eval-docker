@@ -1,4 +1,0 @@
-numpy
-scipy>=0.17.0
-pytest
-udapi>=0.3.0
