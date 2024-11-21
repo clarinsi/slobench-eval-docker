@@ -1,0 +1,1 @@
+Using ufal/corefud coreference scorer cloned on November 15 2024 (latest commit 0a50d2d)
