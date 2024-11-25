@@ -258,7 +258,7 @@ def process_arguments(args):
 
     msg += " using {:s} match evaluation setting.\n".format(args['match'])
     msg += "The following metrics will be evaluated: {:s}\n".format(", ".join([name for name in args['metrics']]))
-    print(msg)
+    # print(msg)
     
     args['metrics'] = [(name, metric_dict[name]) for name in args['metrics']]
 
@@ -282,30 +282,30 @@ def evaluate(args):
         if name == 'non-referring':
             recall, precision, f1 = evaluate_non_referrings(
                 reader.doc_non_referring_infos)
-            print('============================================')
-            print('Non-referring markable identification scores:')
-            print('Recall: %.2f' % (recall * 100),
-                  ' Precision: %.2f' % (precision * 100),
-                  ' F1: %.2f' % (f1 * 100))
+            # print('============================================')
+            # print('Non-referring markable identification scores:')
+            # print('Recall: %.2f' % (recall * 100),
+            #       ' Precision: %.2f' % (precision * 100),
+            #       ' F1: %.2f' % (f1 * 100))
         elif name == 'bridging':
             score_ar, score_fbm, score_fbe = evaluator.evaluate_bridgings(reader.doc_bridging_infos)
             recall_ar, precision_ar, f1_ar = score_ar
             recall_fbm, precision_fbm, f1_fbm = score_fbm
             recall_fbe, precision_fbe, f1_fbe = score_fbe
 
-            print('============================================')
-            print('Bridging anaphora recognition scores:')
-            print('Recall: %.2f' % (recall_ar * 100),
-                  ' Precision: %.2f' % (precision_ar * 100),
-                  ' F1: %.2f' % (f1_ar * 100))
-            print('Full bridging scores (Markable Level):')
-            print('Recall: %.2f' % (recall_fbm * 100),
-                  ' Precision: %.2f' % (precision_fbm * 100),
-                  ' F1: %.2f' % (f1_fbm * 100))
-            print('Full bridging scores (Entity Level):')
-            print('Recall: %.2f' % (recall_fbe * 100),
-                  ' Precision: %.2f' % (precision_fbe * 100),
-                  ' F1: %.2f' % (f1_fbe * 100))
+            # print('============================================')
+            # print('Bridging anaphora recognition scores:')
+            # print('Recall: %.2f' % (recall_ar * 100),
+            #       ' Precision: %.2f' % (precision_ar * 100),
+            #       ' F1: %.2f' % (f1_ar * 100))
+            # print('Full bridging scores (Markable Level):')
+            # print('Recall: %.2f' % (recall_fbm * 100),
+            #       ' Precision: %.2f' % (precision_fbm * 100),
+            #       ' F1: %.2f' % (f1_fbm * 100))
+            # print('Full bridging scores (Entity Level):')
+            # print('Recall: %.2f' % (recall_fbe * 100),
+            #       ' Precision: %.2f' % (precision_fbe * 100),
+            #       ' F1: %.2f' % (f1_fbe * 100))
         else:
             recall, precision, f1 = evaluator.evaluate_documents(
                 reader.doc_discourse_deixis_infos if args['evaluate_discourse_deixis'] else reader.doc_coref_infos,
@@ -316,14 +316,14 @@ def evaluate(args):
                 conll += f1
                 conll_subparts_num += 1
 
-            print(name)
-            print('Recall: %.2f' % (recall * 100),
-                  ' Precision: %.2f' % (precision * 100),
-                  ' F1: %.2f' % (f1 * 100))
+            # print(name)
+            # print('Recall: %.2f' % (recall * 100),
+            #       ' Precision: %.2f' % (precision * 100),
+            #       ' F1: %.2f' % (f1 * 100))
 
     if conll_subparts_num == 3:
         conll = (conll / 3) * 100
-        print('CoNLL score: %.2f' % conll)
+        # print('CoNLL score: %.2f' % conll)
 
 def main():
     args = parse_arguments()
