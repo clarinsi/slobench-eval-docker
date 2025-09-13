@@ -1,4 +1,4 @@
-# Slobench evaluation scripts for the SloPragEval benchmark
+# Slobench evaluation scripts for the SloPragMegaEval benchmark
 
 The directory contains evaluation scripts for the <b>SloPragMega</b> leaderboard which evaluates model performance on **understanding Metaphor, Irony, and Humour** in a **multiple-choice question-answering** (MCQA) task.
 

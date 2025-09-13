@@ -74,6 +74,7 @@ This repository supports the following tasks:
 * **eval\_sequence\_pair\_classification**: Sequence pair classification evaluation.
 * **eval\_speech\_recognition**: Automated speech recognition evaluation.
 * **eval_sloprageval**: Pragmatics understanding in a multiple-choice question-answering (MCQA) task.
+* **eval_pragmegaeval**: Understanding Metaphor, Irony, and Humour in a multiple-choice question-answering (MCQA) task.
 
 ----
 
