@@ -1,16 +1,3 @@
-"""
-Diarisation Benchmark - Simplified Evaluator
-==============================================
-Project: diarisation-benchmark
-Description: Simplified evaluator that computes DER metrics for two datasets
-             (ROG-Dialog and ROG-Art) using hardcoded file paths and errata.
-             Outputs a dictionary with per-dataset metrics.
-             Uses the same errata merging logic as the official evaluation script.
-
-Author: Tomaž Savodnik
-Date: March 2026
-"""
-
 import os
 import json
 from pathlib import Path
@@ -302,7 +289,7 @@ def evaluate(reference_dataset_path: Path, data_submission_path: Path) -> dict:
         },
     ]
 
-    collar = 0.0
+    collar = 0.25
     skip_overlap = False
 
     result_dict = {}
