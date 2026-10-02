@@ -1,0 +1,117 @@
+import json
+from pathlib import Path
+from pyannote.core import Segment, Annotation
+from pyannote.metrics.diarization import DiarizationErrorRate
+
+
+def load_rttm(file_path):
+    annotations = {}
+    with open(file_path, "r", encoding="utf-8", errors="replace") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith(";") or line.startswith("#"):
+                continue
+            parts = line.split()
+            if len(parts) < 8:
+                continue
+            if parts[0].upper() != "SPEAKER":
+                continue
+            try:
+                file_id = parts[1]
+                start = float(parts[3])
+                duration = float(parts[4])
+            except (ValueError, IndexError):
+                continue
+            label = parts[7]
+
+            if file_id not in annotations:
+                annotations[file_id] = Annotation(uri=file_id)
+
+            annotations[file_id][Segment(start, start + duration)] = label
+    return annotations
+
+
+def evaluate_pair(
+    gold_rttm_path: str, predicted_rttm_path: str, collar: float = 0.25, suffix=""
+) -> dict:
+    """
+    Read reference and prediction RTTM files and compute DER metrics.
+
+    Args:
+        gold_rttm_path: Path to the gold standard (reference) RTTM file.
+        predicted_rttm_path: Path to the predictions (hypothesis) RTTM file.
+        collar: Collar size in seconds (default: 0.25).
+    """
+
+    # Load annotations (each returns dict keyed by file_id)
+    refs = load_rttm(gold_rttm_path)
+    hyps = load_rttm(predicted_rttm_path)
+
+    # Find common file IDs
+    common = set(refs.keys()) & set(hyps.keys())
+    if not common:
+        return {}
+
+    metric = DiarizationErrorRate(collar=collar, skip_overlap=False)
+    metric_reset = DiarizationErrorRate(collar=collar, skip_overlap=False)
+
+    global_total = 0.0
+    global_fa = 0.0
+    global_miss = 0.0
+    global_conf = 0.0
+
+    for file_id in common:
+        stats = metric(refs[file_id], hyps[file_id], detailed=True)
+        global_total += stats.get("total", 0.0)
+        global_fa += stats.get("false alarm", 0.0)
+        global_miss += stats.get("missed detection", 0.0)
+        global_conf += stats.get("confusion", 0.0)
+
+    if global_total > 0:
+        der = (global_fa + global_miss + global_conf) / global_total * 100
+        return {
+            f"DER{suffix}": der,
+            f"MISS{suffix}": (global_miss / global_total) * 100,
+            f"FA{suffix}": (global_fa / global_total) * 100,
+            f"CONF{suffix}": (global_conf / global_total) * 100,
+        }
+
+    return {
+        f"DER{suffix}": None,
+        f"MISS{suffix}": None,
+        f"FA{suffix}": None,
+        f"CONF{suffix}": None,
+    }
+
+
+def evaluate(reference_dataset_path, data_submission_path):
+
+    # print(
+    #     f"""{list(Path(reference_dataset_path).iterdir())=}\n\n\n{list(Path(data_submission_path).iterdir())=}\n"""
+    # )
+    submission_art = Path(data_submission_path, "ROG-Art.rttm")
+    submission_dialog = Path(data_submission_path, "ROG-Dialog.rttm")
+    # references_art_s = Path(reference_dataset_path, "ROG-Art-gold_standard.rttm")
+    references_art_t = Path(reference_dataset_path, "ROG-Art-gold_trimmed.rttm")
+    # references_dialog_s = Path(reference_dataset_path, "ROG-Dialog-gold_standard.rttm")
+    references_dialog_t = Path(reference_dataset_path, "ROG-Dialog-gold_trimmed.rttm")
+    assert submission_art.exists(), "ROG-Art submission file not found!"
+    assert submission_dialog.exists(), "ROG-Dialog submission file not found"
+    assert references_art_t.exists(), "ROG-Art references file not found!"
+    assert references_dialog_t.exists(), "ROG-Dialog references file not found!"
+
+    diat = evaluate_pair(
+        gold_rttm_path=references_dialog_t,
+        predicted_rttm_path=submission_dialog,
+        suffix="_ROG-Dialog",
+    )
+    artt = evaluate_pair(
+        gold_rttm_path=references_art_t,
+        predicted_rttm_path=submission_art,
+        suffix="_ROG-Art",
+    )
+
+    return {**artt, **diat}
+
+
+2 + 2

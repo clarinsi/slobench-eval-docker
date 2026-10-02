@@ -115,7 +115,7 @@ def load_rttm(file_path):
     """Load a single RTTM file and return annotations keyed by file ID."""
     annotations = {}
     if not os.path.isfile(file_path):
-        print(f"WARNING: File not found: {file_path}", flush=True)
+        #print(f"WARNING: File not found: {file_path}", flush=True)
         return annotations
 
     with open(file_path, "r", encoding="utf-8", errors="replace") as f:
@@ -266,13 +266,13 @@ def evaluate(reference_dataset_path: Path, data_submission_path: Path) -> dict:
     manual_errata = _load_json_dict(manual_errata_path)
     auto_errata = _load_json_dict(auto_errata_path)
 
-    print(f"Loaded manual errata: {len(manual_errata)} entries", flush=True)
-    print(f"Loaded auto errata: {len(auto_errata)} entries", flush=True)
+    #print(f"Loaded manual errata: {len(manual_errata)} entries", flush=True)
+    #print(f"Loaded auto errata: {len(auto_errata)} entries", flush=True)
 
     # Merge them using the official logic (max for trim_start, min for trim_end)
     # Same errata applies to both datasets
     errata_merged = merge_errata_for_evaluation(manual_errata, auto_errata)
-    print(f"Merged errata: {len(errata_merged)} entries", flush=True)
+    #print(f"Merged errata: {len(errata_merged)} entries", flush=True)
 
     datasets = [
         {
@@ -302,7 +302,7 @@ def evaluate(reference_dataset_path: Path, data_submission_path: Path) -> dict:
         hyps = load_rttm(ds["hyp_path"])
 
         if not refs or not hyps:
-            print(f"WARNING: No annotations loaded for {name}")
+            #print(f"WARNING: No annotations loaded for {name}")
             result_dict[f"DER_{name}"] = 0.0
             result_dict[f"MISS_{name}"] = 0.0
             result_dict[f"FA_{name}"] = 0.0
@@ -311,7 +311,7 @@ def evaluate(reference_dataset_path: Path, data_submission_path: Path) -> dict:
 
         common_files = sorted(list(set(refs.keys()) & set(hyps.keys())))
         if not common_files:
-            print(
+            #print(
                 f"WARNING: No matching file IDs between gold and prediction for {name}!"
             )
             result_dict[f"DER_{name}"] = 0.0
@@ -360,7 +360,7 @@ def evaluate(reference_dataset_path: Path, data_submission_path: Path) -> dict:
         result_dict[f"FA_{name}"] = g_fa_proc
         result_dict[f"CONF_{name}"] = g_conf_proc
 
-        print(
+        #print(
             f"{name}: DER={global_der_proc:.4f}%, MISS={g_miss_proc:.4f}%, FA={g_fa_proc:.4f}%, CONF={g_conf_proc:.4f}%"
         )
 

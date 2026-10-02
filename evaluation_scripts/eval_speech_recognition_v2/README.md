@@ -17,18 +17,18 @@ slobench/eval:speech_recognition_2.0 sample_reference.zip sample_submission.zip
 
 Expected output:
 
- ```
+```json
  {
   "status": "S",
   "metrics": {
-    "CER": 0.288172814054587,
-    "WER": 0.5523590333716916,
-    "1-WER": 0.44764096662830843,
-    "MER": 0.5212240868706811,
-    "WIL": 0.722667648482338,
-    "WIP": 0.27733235151766206,
-    "NORM": 0.105561971663809,
-    "VERB": 0.35406698564593303
+    "CER": 0.2881,
+    "WER": 0.5523,
+    "1-WER": 0.44,
+    "MER": 0.5212,
+    "WIL": 0.7226,
+    "WIP": 0.2773,
+    "NORM": 0.105,
+    "VERB": 0.3543
   },
   "evaluation_time": 13.503033,
   "error_report": ""
