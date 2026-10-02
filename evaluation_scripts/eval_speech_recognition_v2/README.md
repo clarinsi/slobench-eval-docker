@@ -4,7 +4,7 @@ This folder also contains reference dataset (ground truth) and submission .zip f
 
 ## Build docker image (from the root directory of this repo):
 ```
-docker buildx build --platform linux/amd64 -t slobench/eval:speech_recognition_2.0 -f evaluation_scripts/eval_speech_recognition_v2/Dockerfile .
+docker buildx build --platform linux/amd64 -t slobench/eval:speech_recognition_v2_1.0 -f evaluation_scripts/eval_speech_recognition_v2/Dockerfile .
 ```
 
 ## Run mock evaluation (from the root directory of this repo)
@@ -12,7 +12,7 @@ docker buildx build --platform linux/amd64 -t slobench/eval:speech_recognition_2
 docker run -it --name eval_speech_recognition_v2 --rm \
 -v $PWD/evaluation_scripts/eval_speech_recognition_v2/sample_reference.zip:/sample_reference.zip \
 -v $PWD/evaluation_scripts/eval_speech_recognition_v2/sample_submission.zip:/sample_submission.zip \
-slobench/eval:speech_recognition_2.0 sample_reference.zip sample_submission.zip
+slobench/eval:speech_recognition_v2_1.0 sample_reference.zip sample_submission.zip
 ```
 
 Expected output:
