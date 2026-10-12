@@ -57,7 +57,7 @@ curl --remote-name-all https://www.clarin.si/repository/xmlui/bitstream/handle/1
 
 # Build docker image (from the root directory of this repo):
 ```
-docker build --platform linux/amd64 -t slobench/eval:speech_diarisation -f evaluation_scripts/eval_speech_diarisation/Dockerfile .
+docker build --platform linux/amd64 -t slobench/eval:speech_diarisation_1.0 -f evaluation_scripts/eval_speech_diarisation/Dockerfile .
 ```
 
 # Run mock evaluation (from the root directory of this repo)
@@ -65,5 +65,5 @@ docker build --platform linux/amd64 -t slobench/eval:speech_diarisation -f evalu
 docker run -it --name eval_speech_diarisation --rm \
 -v $PWD/evaluation_scripts/eval_speech_diarisation/sample_reference.zip:/reference_dataset.zip \
 -v $PWD/evaluation_scripts/eval_speech_diarisation/sample_submission.zip:/submission.zip \
-slobench/eval:speech_diarisation reference_dataset.zip submission.zip
+slobench/eval:speech_diarisation_1.0 reference_dataset.zip submission.zip
 ```
