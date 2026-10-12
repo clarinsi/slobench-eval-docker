@@ -1,8 +1,8 @@
+import json
 import re
 from pathlib import Path
 
 import jiwer
-import polars as pl
 
 preprocess = jiwer.Compose(
     [
@@ -91,59 +91,46 @@ def generate_optimal_transcript(
     return gold
 
 
-def compute_metrics(df: pl.DataFrame) -> dict:
-    """Compute all benchmark metrics for an already-joined dataframe.
+def _read_ndjson(path: Path) -> list:
+    """Read a newline-delimited JSON file into a list of dictionaries."""
+    rows = []
+    with path.open("r", encoding="utf-8") as handle:
+        for line in handle:
+            line = line.strip()
+            if not line:
+                continue
+            rows.append(json.loads(line))
+    return rows
 
-    The dataframe is expected to contain the columns ``id``, ``norm``, ``colloq``
-    and ``text``.
+
+def compute_metrics(rows: list) -> dict:
+    """Compute all benchmark metrics for already-joined rows.
+
+    Each row is a mapping expected to contain the keys ``id``, ``norm``,
+    ``colloq`` and ``text``.
     """
-    df = df.with_columns(
-        pl.struct(["norm", "colloq", "text"])
-        .map_elements(
-            lambda row: generate_optimal_transcript(
-                row["norm"], row["colloq"], row["text"]
-            ),
-            return_dtype=pl.String,
+    text = []
+    crossd_wer = []
+    crossd_cer = []
+    colloqd_wer = []
+    normd_wer = []
+    for row in rows:
+        norm, colloq = row["norm"], row["colloq"]
+        hypothesis = row["text"]
+        text.append(hypothesis)
+        crossd_wer.append(generate_optimal_transcript(norm, colloq, hypothesis))
+        crossd_cer.append(
+            generate_optimal_transcript(norm, colloq, hypothesis, metric=jiwer.cer)
         )
-        .alias("crossd_wer"),
-        pl.struct(["norm", "colloq", "text"])
-        .map_elements(
-            lambda row: generate_optimal_transcript(
-                row["norm"], row["colloq"], row["text"], metric=jiwer.cer
-            ),
-            return_dtype=pl.String,
+        colloqd_wer.append(
+            generate_optimal_transcript(norm, colloq, hypothesis, tier="colloq")
         )
-        .alias("crossd_cer"),
-        pl.struct(["norm", "colloq", "text"])
-        .map_elements(
-            lambda row: generate_optimal_transcript(
-                row["norm"], row["colloq"], row["text"], tier="colloq"
-            ),
-            return_dtype=pl.String,
+        normd_wer.append(
+            generate_optimal_transcript(norm, colloq, hypothesis, tier="norm")
         )
-        .alias("colloqd_wer"),
-        pl.struct(["norm", "colloq", "text"])
-        .map_elements(
-            lambda row: generate_optimal_transcript(
-                row["norm"], row["colloq"], row["text"], tier="norm"
-            ),
-            return_dtype=pl.String,
-        )
-        .alias("normd_wer"),
-    )
 
-    text = df["text"].to_list()
-    crossd_wer = df["crossd_wer"].to_list()
-    crossd_cer = df["crossd_cer"].to_list()
-    colloqd_wer = df["colloqd_wer"].to_list()
-    normd_wer = df["normd_wer"].to_list()
-
-    total_deletables = df.select(
-        pl.col("norm").str.count_matches("{", literal=True).sum()
-    ).item()
-    preserved_deletables = df.select(
-        pl.col("normd_wer").str.count_matches("{", literal=True).sum()
-    ).item()
+    total_deletables = sum(row["norm"].count("{") for row in rows)
+    preserved_deletables = sum(gold.count("{") for gold in normd_wer)
     preserved_deletables_ratio = (
         preserved_deletables / total_deletables if total_deletables else 0.0
     )
@@ -199,82 +186,111 @@ GROUP_SUFFIXES = (("SloBench", "1"), ("GSO", "2"))
 ID_PREFIXES = tuple(prefix for prefix, _ in GROUP_SUFFIXES)
 
 
-def _require_columns(df: pl.DataFrame, name: str, required: list) -> None:
-    """Raise if ``df`` is missing any of the ``required`` columns."""
-    missing = [col for col in required if col not in df.columns]
+def _require_columns(rows: list, name: str, required: list) -> None:
+    """Raise if ``rows`` is missing any of the ``required`` columns."""
+    present = set()
+    for row in rows:
+        present.update(row.keys())
+    missing = [col for col in required if col not in present]
     if missing:
         raise Exception(
             f"The {name} file is missing required columns: {', '.join(missing)}"
         )
 
 
-def _require_no_nulls(df: pl.DataFrame, name: str, columns: list) -> None:
+def _require_no_nulls(rows: list, name: str, columns: list) -> None:
     """Raise if any of the ``columns`` contain null values."""
-    null_columns = [col for col in columns if df[col].null_count() > 0]
+    null_columns = [
+        col for col in columns if any(row.get(col) is None for row in rows)
+    ]
     if null_columns:
         raise Exception(
             f"The {name} file contains null values in columns: {', '.join(null_columns)}"
         )
 
 
+def _duplicate_ids(rows: list) -> list:
+    """Return the unique ``id`` values that occur more than once, in order."""
+    counts = {}
+    for row in rows:
+        key = row["id"]
+        counts[key] = counts.get(key, 0) + 1
+    return [key for key, count in counts.items() if count > 1]
+
+
 def evaluate(reference_dataset_path, data_submission_path):
     reference_path = Path(".", reference_dataset_path, "asr_sample_reference.jsonl")
     if not reference_path.exists():
         raise FileNotFoundError(f"Reference file does not exist: {reference_path}")
-    reference_df = pl.read_ndjson(reference_path)
+    reference_rows = _read_ndjson(reference_path)
 
     submission_path = Path(".", data_submission_path, "asr_sample_submission.jsonl")
     if not submission_path.exists():
         raise FileNotFoundError(f"Submission file does not exist: {submission_path}")
-    submission_df = pl.read_ndjson(submission_path)
+    submission_rows = _read_ndjson(submission_path)
 
-    _require_columns(reference_df, "reference", ["id", "norm", "colloq"])
-    _require_columns(submission_df, "submission", ["id", "text"])
-    _require_no_nulls(reference_df, "reference", ["id", "norm", "colloq"])
-    _require_no_nulls(submission_df, "submission", ["id", "text"])
-    submission_df = submission_df.select(["id", "text"])
+    _require_columns(reference_rows, "reference", ["id", "norm", "colloq"])
+    _require_columns(submission_rows, "submission", ["id", "text"])
+    _require_no_nulls(reference_rows, "reference", ["id", "norm", "colloq"])
+    _require_no_nulls(submission_rows, "submission", ["id", "text"])
+    submission_rows = [
+        {"id": row["id"], "text": row["text"]} for row in submission_rows
+    ]
 
-    for name, data in (("reference", reference_df), ("submission", submission_df)):
-        duplicates = data.filter(pl.col("id").is_duplicated())
-        if duplicates.height:
-            sample = ", ".join(duplicates["id"].unique().head(5).to_list())
+    for name, data in (("reference", reference_rows), ("submission", submission_rows)):
+        duplicates = _duplicate_ids(data)
+        if duplicates:
+            sample = ", ".join(duplicates[:5])
             raise Exception(
                 f"The {name} file contains duplicate 'id' entries: {sample}"
             )
 
-    missing = reference_df.join(submission_df, on="id", how="anti").height
+    reference_ids = {row["id"] for row in reference_rows}
+    submission_ids = {row["id"] for row in submission_rows}
+
+    missing = len(reference_ids - submission_ids)
     if missing:
         raise Exception(f"The submission is missing {missing} reference entries.")
 
-    extra = submission_df.join(reference_df, on="id", how="anti").height
+    extra = len(submission_ids - reference_ids)
     if extra:
         raise Exception(
             f"The submission contains {extra} entries that are not present "
             "in the reference."
         )
 
-    df = reference_df.join(submission_df, on="id", how="inner").fill_null("")
+    text_by_id = {row["id"]: row["text"] for row in submission_rows}
+    df = []
+    for row in reference_rows:
+        norm = row["norm"]
+        colloq = row["colloq"]
+        text = text_by_id[row["id"]]
+        df.append(
+            {
+                "id": row["id"],
+                "norm": "" if norm is None else norm,
+                "colloq": "" if colloq is None else colloq,
+                "text": "" if text is None else text,
+            }
+        )
 
-    matches_prefix = pl.col("id").str.starts_with(ID_PREFIXES[0])
-    for prefix in ID_PREFIXES[1:]:
-        matches_prefix = matches_prefix | pl.col("id").str.starts_with(prefix)
-    unmatched = df.filter(~matches_prefix)
-    if unmatched.height:
-        sample = ", ".join(unmatched["id"].head(5).to_list())
+    unmatched = [row for row in df if not row["id"].startswith(ID_PREFIXES)]
+    if unmatched:
+        sample = ", ".join(row["id"] for row in unmatched[:5])
         prefixes = " or ".join(f"'{prefix}'" for prefix in ID_PREFIXES)
         raise Exception(
-            f"Found {unmatched.height} entries whose 'id' does not start with "
+            f"Found {len(unmatched)} entries whose 'id' does not start with "
             f"{prefixes}: {sample}"
         )
 
     metrics = {}
     for prefix, suffix in GROUP_SUFFIXES:
-        group_df = df.filter(pl.col("id").str.starts_with(prefix))
-        if group_df.height == 0:
+        group_rows = [row for row in df if row["id"].startswith(prefix)]
+        if not group_rows:
             raise Exception(
                 f"No entries found for the '{prefix}' id prefix; cannot compute metrics."
             )
-        group_metrics = compute_metrics(group_df)
+        group_metrics = compute_metrics(group_rows)
         for metric, value in group_metrics.items():
             metrics[f"{metric}{suffix}"] = value
 

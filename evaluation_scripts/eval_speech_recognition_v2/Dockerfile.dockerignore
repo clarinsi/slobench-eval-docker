@@ -1,0 +1,25 @@
+# Dockerfile-specific ignore file for the ASR v2 evaluation image.
+#
+# The build context is the repository root, which contains several GB of local
+# data (audio archives, extracted segments, reference archives and local
+# environments) that this image does not need. Excluding them keeps the
+# context tiny so BuildKit does not have to hash and send them on every build.
+#
+# This file only affects builds that use this Dockerfile (via `-f`); the build
+# command itself is unchanged and other benchmarks are unaffected.
+#
+# Patterns are relative to the root of the build context; the "**/" prefix
+# makes them match at any depth.
+
+# Local data / artifacts (not needed to run the evaluation)
+**/bahraloutur
+**/bahreloutur
+**/nahreloutur
+**/segments
+**/segmentsproper
+
+# Local tooling, caches and VCS metadata
+**/.pixi
+**/__pycache__
+**/.vscode
+**/.git
